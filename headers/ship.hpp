@@ -7,6 +7,7 @@ protected:
   int damage;
 
   Ship() = default;
+  Ship(int h, int s, int d) : health(h), size(s), damage(d) {}
 
 public:
   virtual ~Ship() = default;

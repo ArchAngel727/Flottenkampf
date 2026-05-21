@@ -4,8 +4,9 @@
 #include <vector>
 class GameManager {
 private:
-  std::vector<Player> players;
+  std::vector<Player *> players;
   bool running;
+  size_t turn;
 
 public:
   GameManager();

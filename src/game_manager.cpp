@@ -1,51 +1,55 @@
 #include "../headers/game_manager.hpp"
 #include <iostream>
-#include <string>
 #include <vector>
 
 GameManager::GameManager() {
-  this->players.push_back(Player());
-  this->players.push_back(Player());
+  this->turn = 0;
+
+  this->players.push_back(new Player());
+  this->players.push_back(new Player());
 }
 
 GameManager::~GameManager() {}
 
-std::vector<std::string> split(std::string s, const std::string &delimiter) {
-  std::vector<std::string> tokens;
-  size_t pos = 0;
-  std::string token;
+void play_turn(Player &current, Player &other) {
+  Ship *attack_ship = current.get_random_ship();
+  Ship *attacked_ship = other.get_random_ship();
 
-  while ((pos = s.find(delimiter)) != std::string::npos) {
-    token = s.substr(0, pos);
-    tokens.push_back(token);
-    s.erase(0, pos + delimiter.length());
+  if (attack_ship == nullptr || attacked_ship == nullptr) {
+    return;
   }
-  tokens.push_back(s);
 
-  return tokens;
-}
+  attacked_ship->take_damage(attack_ship->get_damage());
 
-bool run_command(std::string cmd) {
-  auto cmds = split(cmd, " ");
+  std::cout << '<' << attack_ship->get_health() << ", ";
+  std::cout << attack_ship->get_damage() << '>' << ' ';
 
-  return false;
+  std::cout << '<' << attacked_ship->get_health() << ", ";
+  std::cout << attacked_ship->get_damage() << '>' << '\n';
 }
 
 void GameManager::loop() {
-  std::string cmd;
   this->running = true;
 
-  while (this->running) {
-    if (!std::getline(std::cin, cmd)) {
+  while (1) {
+    for (auto player : this->players) {
+      player->check_ships();
+
+      if (player->get_ship_count() == 0) {
+        this->running = false;
+      }
+    }
+
+    if (!this->running) {
       break;
     }
 
-    if (cmd.empty()) {
-      continue;
+    if (this->turn == 0) {
+      play_turn(*this->players[0], *this->players[1]);
+    } else {
+      play_turn(*this->players[1], *this->players[0]);
     }
 
-    if (run_command(cmd)) {
-      this->running = false;
-    }
+    this->turn = (this->turn + 1) % 2;
   }
 }

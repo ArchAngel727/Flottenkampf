@@ -1,10 +1,10 @@
 #pragma once
 
 #include "./ship.hpp"
-class Jaeger : public Ship {
+class Zerstoerer : public Ship {
 public:
-  Jaeger();
-  ~Jaeger() override;
+  Zerstoerer();
+  ~Zerstoerer() override;
 
   void attack(Ship *) override;
   void take_damage(int) override;

@@ -1,5 +1,9 @@
 #include "../headers/player.hpp"
 #include "../headers/jaeger.hpp"
+#include "../headers/kreuzer.hpp"
+#include "../headers/zerstoerer.hpp"
+#include <algorithm>
+#include <cstdlib>
 #include <exception>
 #include <iostream>
 #include <string>
@@ -22,8 +26,12 @@ void init_ship(std::vector<Ship *> &vec, ShipType type) {
     switch (type) {
     case ShipType::Jaeger:
       std::cout << "Jäger";
+      break;
     case Zersoerer:
+      std::cout << "Zerstörer";
+      break;
     case Kreuzer:
+      std::cout << "Kreuzer";
       break;
     }
 
@@ -47,7 +55,10 @@ void init_ship(std::vector<Ship *> &vec, ShipType type) {
         vec.push_back(new class Jaeger());
         break;
       case Zersoerer:
+        vec.push_back(new class Zerstoerer());
+        break;
       case Kreuzer:
+        vec.push_back(new class Kreuzer());
         break;
       }
 
@@ -58,10 +69,37 @@ void init_ship(std::vector<Ship *> &vec, ShipType type) {
   }
 }
 
-Player::Player() { init_ship(this->ships, ShipType::Jaeger); }
+Player::Player() {
+  init_ship(this->ships, ShipType::Jaeger);
+  init_ship(this->ships, ShipType::Zersoerer);
+  init_ship(this->ships, ShipType::Kreuzer);
+}
 
 Player::~Player() {
   for (auto ship : this->ships) {
     delete ship;
+    std::cout << ship->get_health();
   }
 }
+
+Ship *Player::get_random_ship() {
+  if (this->ships.empty()) {
+    return nullptr;
+  }
+
+  return this->ships[rand() % this->ships.size()];
+}
+
+void Player::check_ships() {
+  auto new_end =
+      std::remove_if(this->ships.begin(), this->ships.end(), [](Ship *s) {
+        if (s == nullptr || s->get_health() <= 0) {
+          delete s;
+          return true;
+        }
+        return false;
+      });
+  ships.erase(new_end, ships.end());
+}
+
+int Player::get_ship_count() { return this->ships.size(); }

@@ -1,13 +1,19 @@
 #include "../headers/jaeger.hpp"
 #include <cstdlib>
 
-Jaeger::Jaeger() : health(75), size(4), damage(30) {}
+Jaeger::Jaeger() : Ship(75, 4, 30) {}
 
 Jaeger::~Jaeger() {}
 
 void Jaeger::attack(Ship *other) {
-  if (rand() % 11 >= other->get_size()) {
+  int rand_num = rand() % 11;
+
+  if (rand_num >= other->get_size()) {
     other->take_damage(this->get_damage());
+
+    if (rand_num > 8) {
+      other->take_damage(this->get_damage());
+    }
   }
 }
 

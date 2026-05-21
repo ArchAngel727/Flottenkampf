@@ -9,4 +9,8 @@ private:
 public:
   Player();
   ~Player();
+
+  Ship *get_random_ship();
+  void check_ships();
+  int get_ship_count();
 };
