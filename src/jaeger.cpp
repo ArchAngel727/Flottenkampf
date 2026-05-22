@@ -1,7 +1,7 @@
 #include "../headers/jaeger.hpp"
 #include <cstdlib>
 
-Jaeger::Jaeger() : Ship(75, 4, 30) {}
+Jaeger::Jaeger(Vector2 pos) : Ship(75, 4, 30, pos) {}
 
 Jaeger::~Jaeger() {}
 
@@ -18,4 +18,3 @@ void Jaeger::attack(Ship *other) {
 }
 
 void Jaeger::take_damage(int damage) { this->health -= damage; }
-void Jaeger::special(Ship *other) {}

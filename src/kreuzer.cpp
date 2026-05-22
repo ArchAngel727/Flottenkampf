@@ -1,7 +1,7 @@
 #include "../headers/kreuzer.hpp"
 #include <cstdlib>
 
-Kreuzer::Kreuzer() : Ship(250, 8, 50) {}
+Kreuzer::Kreuzer(Vector2 pos) : Ship(250, 8, 50, pos) {}
 
 Kreuzer::~Kreuzer() {}
 
@@ -13,4 +13,3 @@ void Kreuzer::attack(Ship *other) {
 }
 
 void Kreuzer::take_damage(int damage) { this->health -= damage; }
-void Kreuzer::special(Ship *other) {}

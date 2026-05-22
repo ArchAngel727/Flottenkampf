@@ -1,7 +1,7 @@
 #include "../headers/zerstoerer.hpp"
 #include <cstdlib>
 
-Zerstoerer::Zerstoerer() : Ship(150, 6, 60) {}
+Zerstoerer::Zerstoerer(Vector2 pos) : Ship(150, 6, 60, pos) {}
 
 Zerstoerer::~Zerstoerer() {}
 
@@ -12,4 +12,3 @@ void Zerstoerer::attack(Ship *other) {
 }
 
 void Zerstoerer::take_damage(int damage) { this->health -= damage; }
-void Zerstoerer::special(Ship *other) {}
