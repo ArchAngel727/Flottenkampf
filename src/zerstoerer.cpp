@@ -1,7 +1,7 @@
 #include "../headers/zerstoerer.hpp"
 #include <cstdlib>
 
-Zerstoerer::Zerstoerer(Vector2 pos) : Ship(150, 6, 60, pos) {}
+Zerstoerer::Zerstoerer(Vector2 pos) : Ship(150, 6, 60, 6, pos) {}
 
 Zerstoerer::~Zerstoerer() {}
 

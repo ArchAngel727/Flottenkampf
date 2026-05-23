@@ -1,6 +1,7 @@
 #pragma once
 
 #include <iostream>
+#include <string>
 class Vector2 {
 private:
   int x, y;
@@ -8,7 +9,6 @@ private:
 public:
   Vector2();
   Vector2(int x, int y);
-  Vector2(const Vector2 &vec);
 
   const int &get_x() const;
   const int &get_y() const;
@@ -24,6 +24,7 @@ public:
 
   Vector2 reverse();
   void normalise();
+  std::string to_string() const;
 
   friend std::ostream &operator<<(std::ostream &, const Vector2 &);
 };

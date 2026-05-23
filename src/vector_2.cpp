@@ -1,4 +1,5 @@
 #include "../headers/vector_2.hpp"
+#include <string>
 
 Vector2::Vector2() {
   this->x = 0;
@@ -8,11 +9,6 @@ Vector2::Vector2() {
 Vector2::Vector2(int x, int y) {
   this->x = x;
   this->y = y;
-}
-
-Vector2::Vector2(const Vector2 &vec) {
-  this->x = vec.get_x();
-  this->y = vec.get_y();
 }
 
 const int &Vector2::get_x() const { return this->x; }
@@ -58,6 +54,18 @@ Vector2 Vector2::reverse() { return Vector2(this->get_y(), this->get_x()); }
 void Vector2::normalise() {
   this->x = (this->x > 0) ? 1 : -1;
   this->y = (this->y > 0) ? 1 : -1;
+}
+
+std::string Vector2::to_string() const {
+  std::string str;
+
+  str.append("<");
+  str.append(std::to_string(this->get_x()));
+  str.append(", ");
+  str.append(std::to_string(this->get_y()));
+  str.append(">");
+
+  return str;
 }
 
 std::ostream &operator<<(std::ostream &stream, const Vector2 &vec) {

@@ -1,6 +1,7 @@
 #include "../headers/game_manager.hpp"
 #include "../headers/jaeger.hpp"
 #include "../headers/kreuzer.hpp"
+#include "../headers/log.hpp"
 #include "../headers/zerstoerer.hpp"
 #include <algorithm>
 #include <cmath>
@@ -128,30 +129,31 @@ void play_turn(Player &current, Player &other) {
   const int *y_1 = &attack_ship->get_position().get_y();
   const int *y_2 = &attacked_ship->get_position().get_y();
 
-  // std::cout << "\nx_1: " << *x_1 << " x_2: " << *x_2 << '\n';
-  // std::cout << "\ny_1: " << *y_1 << " y_2: " << *y_2 << '\n';
+  crazylogger::log("x_1: {}, x_2: {}", *x_1, *x_2);
+  crazylogger::log("y_1: {}, y_2: {}", *y_1, *y_2);
 
   double x = std::max(*x_1, *x_2) - std::min(*x_1, *x_2);
   double y = std::max(*y_1, *y_2) - std::min(*y_1, *y_2);
 
-  // std::cout << "\nx: " << x << " y: " << y << '\n';
+  crazylogger::log("x: {}, y: {}", x, y);
 
   double distance = std::sqrt(x * x + y * y);
 
-  // TODO: store ship type and read it to determine attacking distance
-  attacked_ship->take_damage(attack_ship->get_damage());
+  if (attack_ship->get_attack_distance() > distance) {
+    attacked_ship->take_damage(attack_ship->get_damage());
+  } else {
+    crazylogger::log("Performing crazy manover to move closer to enemy ship "
+                     "(crazy shit indeed)\n");
+    attack_ship->move_closer_to_other_ship(attacked_ship->get_position());
+  }
 
-  std::cout << "Ship1: ";
-  std::cout << attack_ship->get_position() << ' ';
-  std::cout << '<' << attack_ship->get_health() << ", ";
-  std::cout << attack_ship->get_damage() << '>' << ' ';
-
-  // std::cout << "\ndist" << distance << '\n';
-
-  std::cout << "Ship2: ";
-  std::cout << attack_ship->get_position() << ' ';
-  std::cout << '<' << attacked_ship->get_health() << ", ";
-  std::cout << attacked_ship->get_damage() << '>' << '\n';
+  crazylogger::log("Ship1; pos: {}, hp: {}>",
+                   attack_ship->get_position().to_string(),
+                   attack_ship->get_damage());
+  crazylogger::log("Ship2; pos: {}, hp: {}>",
+                   attacked_ship->get_position().to_string(),
+                   attacked_ship->get_damage());
+  crazylogger::log("dist: {}", distance);
 }
 
 void GameManager::loop() {

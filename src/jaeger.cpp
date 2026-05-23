@@ -1,7 +1,7 @@
 #include "../headers/jaeger.hpp"
 #include <cstdlib>
 
-Jaeger::Jaeger(Vector2 pos) : Ship(75, 4, 30, pos) {}
+Jaeger::Jaeger(Vector2 pos) : Ship(75, 4, 30, 4, pos) {}
 
 Jaeger::~Jaeger() {}
 

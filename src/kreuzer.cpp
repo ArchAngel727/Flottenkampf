@@ -1,7 +1,7 @@
 #include "../headers/kreuzer.hpp"
 #include <cstdlib>
 
-Kreuzer::Kreuzer(Vector2 pos) : Ship(250, 8, 50, pos) {}
+Kreuzer::Kreuzer(Vector2 pos) : Ship(250, 8, 50, 5, pos) {}
 
 Kreuzer::~Kreuzer() {}
 
