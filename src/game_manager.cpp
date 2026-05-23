@@ -91,9 +91,7 @@ void init_ship(std::vector<Ship *> &vec, std::vector<Ship *> &all_ships,
   }
 }
 
-GameManager::GameManager() {
-  this->turn = 0;
-
+GameManager::GameManager() : turn(0), renderer(10, 10, 2) {
   while (this->players.size() < 2) {
     std::vector<Ship *> ships;
     std::vector<Ship *> all_ships;
@@ -172,12 +170,17 @@ void GameManager::loop() {
       break;
     }
 
-    if (this->turn == 0) {
-      play_turn(*this->players[0], *this->players[1]);
-    } else {
-      play_turn(*this->players[1], *this->players[0]);
-    }
+    // if (this->turn == 0) {
+    //   play_turn(*this->players[0], *this->players[1]);
+    // } else {
+    //   play_turn(*this->players[1], *this->players[0]);
+    // }
 
     this->turn = (this->turn + 1) % 2;
+
+    this->renderer.render_to_buffer();
+    this->renderer.print();
+
+    break;
   }
 }

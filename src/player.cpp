@@ -1,7 +1,6 @@
 #include "../headers/player.hpp"
 #include <algorithm>
 #include <cstdlib>
-#include <iostream>
 #include <vector>
 
 Player::Player(std::vector<Ship *> ships) : ships(ships) {}
@@ -9,7 +8,6 @@ Player::Player(std::vector<Ship *> ships) : ships(ships) {}
 Player::~Player() {
   for (auto ship : this->ships) {
     delete ship;
-    std::cout << ship->get_health();
   }
 }
 

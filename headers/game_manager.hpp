@@ -1,12 +1,14 @@
 #pragma once
 
 #include "./player.hpp"
+#include "renderer.hpp"
 #include <vector>
 class GameManager {
 private:
-  std::vector<Player *> players;
   bool running;
   size_t turn;
+  Renderer renderer;
+  std::vector<Player *> players;
 
 public:
   GameManager();

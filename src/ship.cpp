@@ -62,7 +62,4 @@ void Ship::move_closer_to_other_ship(const Vector2 &other_pos) {
   if (this->position.get_y() > 4) {
     this->position.set_y(4);
   }
-
-  std::cout << *next_move << " ";
-  std::cout << this->get_position() << "\n";
 }
