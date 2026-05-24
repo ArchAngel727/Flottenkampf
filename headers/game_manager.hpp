@@ -7,7 +7,7 @@ class GameManager {
 private:
   bool running;
   size_t turn;
-  Renderer renderer;
+  Renderer *renderer;
   std::vector<Player *> players;
 
 public:

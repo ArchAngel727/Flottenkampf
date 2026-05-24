@@ -7,6 +7,7 @@ public:
   Zerstoerer(Vector2);
   ~Zerstoerer() override;
 
-  void attack(Ship *) override;
+  void attack(Ship *, int) override;
   void take_damage(int) override;
+  void level_up() override;
 };

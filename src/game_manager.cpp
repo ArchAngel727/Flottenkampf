@@ -3,11 +3,12 @@
 #include "../headers/kreuzer.hpp"
 #include "../headers/log.hpp"
 #include "../headers/zerstoerer.hpp"
-#include <algorithm>
-#include <cmath>
+#include <array>
+#include <chrono>
 #include <exception>
 #include <iostream>
 #include <string>
+#include <thread>
 #include <vector>
 
 enum ShipType {
@@ -15,6 +16,14 @@ enum ShipType {
   Zerstoere = 1,
   Kreuzer = 2,
 };
+
+void clear() {
+#ifdef _WIN32
+  system("cls");
+#else
+  system("clear");
+#endif
+}
 
 void init_ship(std::vector<Ship *> &vec, std::vector<Ship *> &all_ships,
                ShipType type) {
@@ -56,8 +65,8 @@ void init_ship(std::vector<Ship *> &vec, std::vector<Ship *> &all_ships,
       Vector2 pos;
 
       while (selecting_pos) {
-        pos.set_x(rand() % 11);
-        pos.set_y(rand() % 11);
+        pos.set_x(rand() % 10);
+        pos.set_y(rand() % 10);
 
         for (auto ship : all_ships) {
           if (ship == nullptr) {
@@ -91,7 +100,37 @@ void init_ship(std::vector<Ship *> &vec, std::vector<Ship *> &all_ships,
   }
 }
 
-GameManager::GameManager() : turn(0), renderer(10, 10, 2) {
+void play_turn(Player &current, Player &other) {
+  Ship *attack_ship = current.get_random_ship();
+  Ship *attacked_ship = other.get_random_ship();
+
+  if (attack_ship == nullptr || attacked_ship == nullptr) {
+    return;
+  }
+
+  double distance = attack_ship->distance_to(attacked_ship);
+
+  if (attack_ship->get_attack_distance() > distance) {
+    if (attack_ship->get_attack_distance() - 1 > distance) {
+      attack_ship->attack(attacked_ship, -1);
+    } else {
+      attack_ship->attack(attacked_ship);
+    }
+  } else {
+    crazylogger::log("Performing crazy manover to move closer to enemy ship\n");
+    attack_ship->move_closer_to(attacked_ship->get_position());
+  }
+
+  crazylogger::log("Ship1; pos: {}, hp: {}>",
+                   attack_ship->get_position().to_string(),
+                   attack_ship->get_damage());
+  crazylogger::log("Ship2; pos: {}, hp: {}>",
+                   attacked_ship->get_position().to_string(),
+                   attacked_ship->get_damage());
+  crazylogger::log("dist: {}", distance);
+}
+
+GameManager::GameManager() : turn(0), renderer(new Renderer(10, 10, 2)) {
   while (this->players.size() < 2) {
     std::vector<Ship *> ships;
     std::vector<Ship *> all_ships;
@@ -112,52 +151,30 @@ GameManager::GameManager() : turn(0), renderer(10, 10, 2) {
   }
 }
 
-GameManager::~GameManager() {}
-
-void play_turn(Player &current, Player &other) {
-  Ship *attack_ship = current.get_random_ship();
-  Ship *attacked_ship = other.get_random_ship();
-
-  if (attack_ship == nullptr || attacked_ship == nullptr) {
-    return;
+GameManager::~GameManager() {
+  for (auto player : this->players) {
+    delete player;
   }
 
-  const int *x_1 = &attack_ship->get_position().get_x();
-  const int *x_2 = &attacked_ship->get_position().get_x();
-  const int *y_1 = &attack_ship->get_position().get_y();
-  const int *y_2 = &attacked_ship->get_position().get_y();
-
-  crazylogger::log("x_1: {}, x_2: {}", *x_1, *x_2);
-  crazylogger::log("y_1: {}, y_2: {}", *y_1, *y_2);
-
-  double x = std::max(*x_1, *x_2) - std::min(*x_1, *x_2);
-  double y = std::max(*y_1, *y_2) - std::min(*y_1, *y_2);
-
-  crazylogger::log("x: {}, y: {}", x, y);
-
-  double distance = std::sqrt(x * x + y * y);
-
-  if (attack_ship->get_attack_distance() > distance) {
-    attacked_ship->take_damage(attack_ship->get_damage());
-  } else {
-    crazylogger::log("Performing crazy manover to move closer to enemy ship "
-                     "(crazy shit indeed)\n");
-    attack_ship->move_closer_to_other_ship(attacked_ship->get_position());
-  }
-
-  crazylogger::log("Ship1; pos: {}, hp: {}>",
-                   attack_ship->get_position().to_string(),
-                   attack_ship->get_damage());
-  crazylogger::log("Ship2; pos: {}, hp: {}>",
-                   attacked_ship->get_position().to_string(),
-                   attacked_ship->get_damage());
-  crazylogger::log("dist: {}", distance);
+  delete this->renderer;
 }
 
 void GameManager::loop() {
   this->running = true;
+  std::array<const std::vector<Ship *> *, 2> ships = {
+      &this->players[0]->get_ships(), &this->players[1]->get_ships()};
 
   while (1) {
+    if (!this->running) {
+      break;
+    }
+
+    if (this->turn % 2 == 0) {
+      play_turn(*this->players[0], *this->players[1]);
+    } else {
+      play_turn(*this->players[1], *this->players[0]);
+    }
+
     for (auto player : this->players) {
       player->check_ships();
 
@@ -166,21 +183,16 @@ void GameManager::loop() {
       }
     }
 
-    if (!this->running) {
-      break;
-    }
+    this->turn += 1;
 
-    // if (this->turn == 0) {
-    //   play_turn(*this->players[0], *this->players[1]);
-    // } else {
-    //   play_turn(*this->players[1], *this->players[0]);
-    // }
+    clear();
 
-    this->turn = (this->turn + 1) % 2;
+    std::cout << "Turn: " << this->turn << '\n';
 
-    this->renderer.render_to_buffer();
-    this->renderer.print();
+    this->renderer->render_to_buffer(ships);
+    this->renderer->print();
+    this->renderer->clear_buffer();
 
-    break;
+    std::this_thread::sleep_for(std::chrono::milliseconds(50));
   }
 }

@@ -6,10 +6,11 @@
 int Ship::get_health() const { return this->health; }
 int Ship::get_size() const { return this->size; }
 int Ship::get_damage() const { return this->damage; }
+int Ship::get_xp() const { return this->xp; }
 double Ship::get_attack_distance() const { return this->attack_distance; }
 const Vector2 &Ship::get_position() const { return this->position; }
 
-void Ship::move_closer_to_other_ship(const Vector2 &other_pos) {
+void Ship::move_closer_to(const Vector2 &other_pos) {
   Vector2 vec[] = {
       Vector2(this->get_position()) + Vector2(1, 0),
       Vector2(this->get_position()) + Vector2(0, 1),
@@ -62,4 +63,24 @@ void Ship::move_closer_to_other_ship(const Vector2 &other_pos) {
   if (this->position.get_y() > 4) {
     this->position.set_y(4);
   }
+}
+
+double Ship::distance_to(Ship *other) const {
+  double distance = 0;
+
+  if (other == nullptr) {
+    return distance;
+  }
+
+  const int *x_1 = &this->get_position().get_x();
+  const int *x_2 = &other->get_position().get_x();
+  const int *y_1 = &this->get_position().get_y();
+  const int *y_2 = &other->get_position().get_y();
+
+  double x = std::max(*x_1, *x_2) - std::min(*x_1, *x_2);
+  double y = std::max(*y_1, *y_2) - std::min(*y_1, *y_2);
+
+  distance = std::sqrt(x * x + y * y);
+
+  return distance;
 }

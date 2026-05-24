@@ -20,15 +20,21 @@ Ship *Player::get_random_ship() {
 }
 
 void Player::check_ships() {
-  auto new_end =
-      std::remove_if(this->ships.begin(), this->ships.end(), [](Ship *s) {
-        if (s == nullptr || s->get_health() <= 0) {
-          delete s;
-          return true;
-        }
-        return false;
-      });
-  ships.erase(new_end, ships.end());
+  for (Ship *&ship : this->ships) {
+    if (ship == nullptr || ship->get_health() <= 0) {
+      delete ship;
+      ship = nullptr;
+    }
+
+    if (ship != nullptr) {
+      if (ship->get_xp() > 5) {
+        ship->level_up();
+      }
+    }
+  }
+
+  ships.erase(std::remove(this->ships.begin(), this->ships.end(), nullptr),
+              this->ships.end());
 }
 
 int Player::get_ship_count() { return this->ships.size(); }

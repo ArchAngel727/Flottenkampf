@@ -6,6 +6,7 @@ protected:
   int health;
   int size;
   int damage;
+  int xp = 0;
   double attack_distance;
   Vector2 position;
 
@@ -19,11 +20,15 @@ public:
   int get_health() const;
   int get_size() const;
   int get_damage() const;
+  int get_xp() const;
   double get_attack_distance() const;
   const Vector2 &get_position() const;
 
-  void move_closer_to_other_ship(const Vector2 &);
+  double distance_to(Ship *) const;
 
-  virtual void attack(Ship *) = 0;
+  void move_closer_to(const Vector2 &);
+
+  virtual void attack(Ship *, int = 0) = 0;
   virtual void take_damage(int) = 0;
+  virtual void level_up() = 0;
 };
