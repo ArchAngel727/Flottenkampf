@@ -7,6 +7,7 @@ int Ship::get_health() const { return this->health; }
 int Ship::get_size() const { return this->size; }
 int Ship::get_damage() const { return this->damage; }
 int Ship::get_xp() const { return this->xp; }
+int Ship::get_level() const { return this->level; }
 double Ship::get_attack_distance() const { return this->attack_distance; }
 const Vector2 &Ship::get_position() const { return this->position; }
 

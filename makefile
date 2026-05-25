@@ -1,6 +1,7 @@
 # Makefile
 CXX := clang++
 CXXFLAGS := -std=c++20 -g -O0 -Wall -Wextra -Iheaders -fsanitize=address,undefined -fno-omit-frame-pointer
+# CXXFLAGS := -std=c++20 -O3 -Wall -Wextra -Iheaders
 
 SRC_DIR := src
 OBJ_DIR := build

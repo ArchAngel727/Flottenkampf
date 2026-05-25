@@ -1,5 +1,4 @@
 #include "../headers/renderer.hpp"
-#include "../headers/log.hpp"
 #include <array>
 #include <cstring>
 #include <iostream>
@@ -89,6 +88,4 @@ void Renderer::print() const {
 
     std::cout << '\n';
   }
-
-  crazylogger::log("W: {} H: {}", this->width, this->height);
 }

@@ -7,6 +7,7 @@ protected:
   int size;
   int damage;
   int xp = 0;
+  int level = 0;
   double attack_distance;
   Vector2 position;
 
@@ -21,6 +22,7 @@ public:
   int get_size() const;
   int get_damage() const;
   int get_xp() const;
+  int get_level() const;
   double get_attack_distance() const;
   const Vector2 &get_position() const;
 

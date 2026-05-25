@@ -1,7 +1,6 @@
 #include "../headers/game_manager.hpp"
 #include "../headers/jaeger.hpp"
 #include "../headers/kreuzer.hpp"
-#include "../headers/log.hpp"
 #include "../headers/zerstoerer.hpp"
 #include <array>
 #include <chrono>
@@ -117,17 +116,8 @@ void play_turn(Player &current, Player &other) {
       attack_ship->attack(attacked_ship);
     }
   } else {
-    crazylogger::log("Performing crazy manover to move closer to enemy ship\n");
     attack_ship->move_closer_to(attacked_ship->get_position());
   }
-
-  crazylogger::log("Ship1; pos: {}, hp: {}>",
-                   attack_ship->get_position().to_string(),
-                   attack_ship->get_damage());
-  crazylogger::log("Ship2; pos: {}, hp: {}>",
-                   attacked_ship->get_position().to_string(),
-                   attacked_ship->get_damage());
-  crazylogger::log("dist: {}", distance);
 }
 
 GameManager::GameManager() : turn(0), renderer(new Renderer(10, 10, 2)) {
